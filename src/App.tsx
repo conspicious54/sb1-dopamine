@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Brain, Target, TrendingUp, ShoppingCart, Search, ArrowRight, Phone, Mail, MapPin, Sparkles, BarChart3, Users, Star } from 'lucide-react';
+import GoogleAdsPage from './components/GoogleAdsPage';
 
 function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'home' | 'google-ads'>('home');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -13,6 +15,65 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+      // Focus on the form after scrolling
+      setTimeout(() => {
+        const nameInput = document.getElementById('name');
+        if (nameInput) nameInput.focus();
+      }, 800);
+    }
+  };
+
+  const scrollToServices = () => {
+    const servicesSection = document.getElementById('services');
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const service = formData.get('service');
+    const message = formData.get('message');
+
+    // Create email body
+    const emailBody = `Hi Dopamine Solutions,
+
+I'm interested in your services and would like to get started.
+
+Name: ${name}
+Email: ${email}
+Service Interest: ${service}
+Message: ${message}
+
+Looking forward to hearing from you!
+
+Best regards,
+${name}`;
+
+    // Open email client
+    const mailtoLink = `mailto:hello@dopaminesolutions.com?subject=New Lead - ${service}&body=${encodeURIComponent(emailBody)}`;
+    window.location.href = mailtoLink;
+  };
+
+  const showGoogleAdsPage = () => {
+    setCurrentPage('google-ads');
+  };
+
+  const showHomePage = () => {
+    setCurrentPage('home');
+  };
+
+  if (currentPage === 'google-ads') {
+    return <GoogleAdsPage onBack={showHomePage} />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -82,6 +143,7 @@ function App() {
             
             <button 
               className="relative group"
+              onClick={scrollToContact}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -119,7 +181,10 @@ function App() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="group relative">
+              <button 
+                className="group relative"
+                onClick={scrollToContact}
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center">
                   <Zap className="mr-2 h-5 w-5" />
@@ -128,7 +193,10 @@ function App() {
                 </div>
               </button>
               
-              <button className="border border-purple-500/30 text-purple-300 px-8 py-4 rounded-xl hover:bg-purple-500/10 hover:border-purple-400 transition-all">
+              <button 
+                className="border border-purple-500/30 text-purple-300 px-8 py-4 rounded-xl hover:bg-purple-500/10 hover:border-purple-400 transition-all"
+                onClick={scrollToServices}
+              >
                 See The Rush
               </button>
             </div>
@@ -206,10 +274,13 @@ function App() {
                   </div>
                 </div>
                 
-                <button className="w-full group/btn relative">
+                <button 
+                  className="w-full group/btn relative"
+                  onClick={showGoogleAdsPage}
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl blur opacity-75 group-hover/btn:opacity-100 transition-opacity"></div>
                   <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 py-4 rounded-xl hover:from-blue-500 hover:to-cyan-500 transition-all">
-                    Get Your Google Fix
+                    Learn More About Google Ads
                   </div>
                 </button>
               </div>
@@ -269,7 +340,10 @@ function App() {
                   </div>
                 </div>
                 
-                <button className="w-full group/btn relative">
+                <button 
+                  className="w-full group/btn relative"
+                  onClick={scrollToContact}
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-pink-600 rounded-xl blur opacity-75 group-hover/btn:opacity-100 transition-opacity"></div>
                   <div className="relative bg-gradient-to-r from-orange-600 to-pink-600 py-4 rounded-xl hover:from-orange-500 hover:to-pink-500 transition-all">
                     Get Your Amazon High
@@ -426,7 +500,7 @@ function App() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/10 rounded-3xl blur-xl"></div>
               <div className="relative bg-gray-900/50 backdrop-blur-xl border border-blue-500/20 p-8 rounded-3xl">
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleFormSubmit}>
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                       Your Name
@@ -434,6 +508,8 @@ function App() {
                     <input
                       type="text"
                       id="name"
+                      name="name"
+                      required
                       className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
                       placeholder="John Smith"
                     />
@@ -445,6 +521,8 @@ function App() {
                     <input
                       type="email"
                       id="email"
+                      name="email"
+                      required
                       className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
                       placeholder="john@company.com"
                     />
@@ -455,12 +533,14 @@ function App() {
                     </label>
                     <select
                       id="service"
+                      name="service"
+                      required
                       className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
                     >
                       <option value="">Select your addiction</option>
-                      <option value="google-ads">Google Ads (Legacy Business)</option>
-                      <option value="amazon-management">Amazon Management (Existing Brand)</option>
-                      <option value="both">Both (Double the Rush)</option>
+                      <option value="Google Ads (Legacy Business)">Google Ads (Legacy Business)</option>
+                      <option value="Amazon Management (Existing Brand)">Amazon Management (Existing Brand)</option>
+                      <option value="Both (Double the Rush)">Both (Double the Rush)</option>
                     </select>
                   </div>
                   <div>
@@ -469,7 +549,9 @@ function App() {
                     </label>
                     <textarea
                       id="message"
+                      name="message"
                       rows={4}
+                      required
                       className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400"
                       placeholder="What kind of growth high are you looking for?"
                     ></textarea>
