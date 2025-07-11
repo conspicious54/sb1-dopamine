@@ -59,7 +59,7 @@ Best regards,
 ${name}`;
 
     // Open email client
-    const mailtoLink = `mailto:hello@dopaminesolutions.com?subject=New Lead - ${service}&body=${encodeURIComponent(emailBody)}`;
+    const mailtoLink = `mailto:connor@dopamine.solutions?subject=New Lead - ${service}&body=${encodeURIComponent(emailBody)}`;
     window.location.href = mailtoLink;
   };
 
@@ -476,13 +476,13 @@ ${name}`;
                     <div className="bg-purple-500/20 p-3 rounded-lg mr-4 group-hover:bg-purple-500/30 transition-colors">
                       <Phone className="h-5 w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">(555) 123-4567</span>
+                    <span className="text-gray-300">706 372-5624</span>
                   </div>
                   <div className="flex items-center group">
                     <div className="bg-purple-500/20 p-3 rounded-lg mr-4 group-hover:bg-purple-500/30 transition-colors">
                       <Mail className="h-5 w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">hello@dopaminesolutions.com</span>
+                    <span className="text-gray-300">connor@dopamine.solutions</span>
                   </div>
                   <div className="flex items-center group">
                     <div className="bg-purple-500/20 p-3 rounded-lg mr-4 group-hover:bg-purple-500/30 transition-colors">
@@ -617,8 +617,8 @@ ${name}`;
             <div>
               <h4 className="font-semibold text-white mb-4">Get Your Fix</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>(555) 123-4567</li>
-                <li>hello@dopaminesolutions.com</li>
+                <li>706 372-5624</li>
+                <li>connor@dopamine.solutions</li>
                 <li>Available Nationwide</li>
               </ul>
             </div>
